@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block main %}
+<div class="wrap auth">
+  <h1 class="page-title">{{ t('a.login') }}</h1>
+  <p class="muted">{{ t('a.why') }}</p>
+  <form method="post" action="/account/login" class="stack">
+    <input type="hidden" name="next" value="{{ next }}">
+    <label class="field"><span>{{ t('a.email') }}</span><input name="email" type="email" autocomplete="email" required maxlength="200" value="{{ email or '' }}"></label>
+    <label class="field"><span>{{ t('a.password') }}</span><input name="password" type="password" autocomplete="current-password" required maxlength="72"></label>
+    {% if error %}<p class="form-msg" role="alert">{{ error }}</p>{% endif %}
+    <button class="btn primary wide" type="submit">{{ t('a.login') }}</button>
+  </form>
+  <p class="muted small">{{ t('a.forgot') }} <a href="{{ wa }}" target="_blank" rel="noopener">WhatsApp</a></p>
+  <hr>
+  <p>{{ t('a.no_account') }} <a href="/account/register?next={{ next|urlencode }}">{{ t('a.register') }}</a></p>
+</div>
+{% endblock %}

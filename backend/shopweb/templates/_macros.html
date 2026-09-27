@@ -1,0 +1,67 @@
+{% macro price(c) -%}
+<span class="price">
+  {%- if c.price_max and c.price_max != c.price %}<span class="from">{{ t('price.from') }}</span> {% endif -%}
+  <span class="now{{ ' sale' if c.on_sale }}">{{ c.price|rupiah }}</span>
+  {%- if c.on_sale %} <s class="was">{{ c.regular|rupiah }}</s>{% endif -%}
+</span>
+{%- endmacro %}
+
+{% macro stars(r, n=0) -%}
+<span class="stars" aria-label="{{ r }} / 5">
+  {%- for i in range(5) %}<svg class="i{{ ' on' if i < (r|round|int) }}"><use href="#i-star"/></svg>{% endfor -%}
+  {%- if n %}<span class="n">({{ n }})</span>{% endif -%}
+</span>
+{%- endmacro %}
+
+{% macro card(c, eager=false) -%}
+<article class="card" data-product="{{ c.id }}">
+  <a class="card-media" href="/p/{{ c.slug }}" tabindex="-1" aria-hidden="true">
+    {{ img(c.image, c.name, "(max-width: 700px) 50vw, (max-width: 1100px) 33vw, 25vw", "a", eager) }}
+    {% if c.image2 %}{{ img(c.image2, "", "(max-width: 700px) 50vw, (max-width: 1100px) 33vw, 25vw", "b") }}{% endif %}
+    <span class="badges">
+      {% if c.on_sale %}<b class="badge sale">−{{ c.sale_percent }}%</b>{% endif %}
+      {% if c.preorder %}<b class="badge">{{ t('badge.preorder') }}</b>{% endif %}
+    </span>
+  </a>
+  <button class="wish" type="button" data-wish="{{ c.id }}" aria-label="{{ t('p.wish') }}" aria-pressed="false"><svg class="i"><use href="#i-heart"/></svg></button>
+  <div class="card-body">
+    <h3><a href="/p/{{ c.slug }}">{{ c.name }}</a></h3>
+    {% if c.for_text %}<p class="card-for">{{ c.for_text }}</p>{% endif %}
+    <div class="card-foot">
+      {{ price(c) }}
+      {% if c.colors %}<span class="swatches">{% for h in c.colors %}<i data-hex="{{ h }}"></i>{% endfor %}</span>{% endif %}
+    </div>
+    {% if c.rating %}{{ stars(c.rating, c.reviews) }}{% endif %}
+  </div>
+</article>
+{%- endmacro %}
+
+{% macro grid(cards, eager_first=0) -%}
+<div class="grid">
+  {% for c in cards %}{{ card(c, loop.index <= eager_first) }}{% endfor %}
+</div>
+{%- endmacro %}
+
+{% macro head(title, link='', link_text='') -%}
+<div class="sec-head">
+  <h2>{{ title }}</h2>
+  {% if link %}<a class="more" href="{{ link }}">{{ link_text or t('more') }} <svg class="i"><use href="#i-arrow"/></svg></a>{% endif %}
+</div>
+{%- endmacro %}
+
+{% macro chart_table(c) -%}
+<div class="chart">
+  <h3>{{ label(catalog.CUTS, c.cut) }}</h3>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>{{ t('p.size') }}</th>{% if c.rows and c.rows[0].height %}<th>{{ t('p.height') }}</th>{% endif %}
+      {% for col in c.columns %}<th>{{ col[lang] or col.id }}</th>{% endfor %}</tr></thead>
+    <tbody>
+    {% for r in c.rows %}<tr><th>{{ size_label(r.size) }}</th>{% if c.rows[0].height %}<td>{{ r.height }}</td>{% endif %}
+      {% for col in c.columns %}<td>{{ r['values'][col.key] }}</td>{% endfor %}</tr>{% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% set note = tr(c, 'notes') %}{% if note %}<p class="muted small">{{ note }}</p>{% endif %}
+</div>
+{%- endmacro %}

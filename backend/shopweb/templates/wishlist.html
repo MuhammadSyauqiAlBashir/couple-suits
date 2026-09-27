@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% set page_id = "wishlist" %}
+{% block main %}
+<div class="wrap">
+  <h1 class="page-title">{{ t('wish.title') }}</h1>
+  <div class="grid" data-wish-grid></div>
+  <p class="empty" data-wish-empty hidden>{{ t('wish.empty') }}</p>
+  <section class="block" data-recent hidden>
+    <div class="sec-head"><h2>{{ t('recent.title') }}</h2></div>
+    <div class="grid" data-recent-grid></div>
+  </section>
+</div>
+{% endblock %}

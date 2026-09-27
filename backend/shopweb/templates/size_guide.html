@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% from "_macros.html" import chart_table with context %}
+{% block main %}
+<div class="wrap narrow">
+  <h1 class="page-title">{{ t('nav.size_guide') }}</h1>
+  <p class="lead">{{ t('p.measure_tip') }}</p>
+  {% for c in charts %}{{ chart_table(c) }}{% endfor %}
+  <a class="btn ghost" href="{{ wa }}" target="_blank" rel="noopener"><svg class="i"><use href="#i-wa"/></svg> {{ t('p.ask') }}</a>
+</div>
+{% endblock %}

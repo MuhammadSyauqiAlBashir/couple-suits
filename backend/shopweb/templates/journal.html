@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block main %}
+<div class="wrap">
+  <h1 class="page-title">{{ t('blog.title') }}</h1>
+  {% if posts %}
+  <div class="posts">
+    {% for p in posts %}
+    <a class="post-card" href="/journal/{{ p.slug }}">
+      {{ img(p.cover, tr(p, 'title'), "(max-width: 700px) 100vw, 33vw") }}
+      <span class="muted small">{{ (p.published_at or p.created)[:10] }}</span>
+      <h2>{{ tr(p, 'title') }}</h2>
+      <p>{{ tr(p, 'excerpt') or util.plain(tr(p, 'body'), 140) }}</p>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}<p class="muted">{{ t('list.empty') }}</p>{% endif %}
+</div>
+{% endblock %}

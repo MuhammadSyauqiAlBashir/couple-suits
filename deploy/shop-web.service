@@ -1,0 +1,57 @@
+[Unit]
+Description=Couple Suits storefront (FastAPI SSR)
+After=network-online.target pocketbase.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=shopweb
+Group=shopweb
+SupplementaryGroups=couplesuits
+WorkingDirectory=/opt/couple-suits
+Environment=PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+EnvironmentFile=/etc/couple-suits/web.env
+ExecStart=/opt/couple-suits/venv/bin/uvicorn shopweb.main:app --app-dir /opt/couple-suits \
+  --host 127.0.0.1 --port 8200 --workers 1 \
+  --proxy-headers --forwarded-allow-ips 127.0.0.1 \
+  --no-server-header --no-access-log
+Restart=always
+RestartSec=5
+# Media files must be group-writable (both services add photos) and world-readable (Caddy serves them).
+UMask=0002
+ReadWritePaths=/var/lib/couple-suits/media
+
+MemoryHigh=200M
+MemoryMax=300M
+TasksMax=64
+
+# Sandbox: read-only system; writable only the media folder (and the private state dir for the admin)
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+ProtectProc=invisible
+ProcSubset=pid
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+SystemCallErrorNumber=EPERM
+CapabilityBoundingSet=
+AmbientCapabilities=
+RemoveIPC=true
+
+[Install]
+WantedBy=multi-user.target

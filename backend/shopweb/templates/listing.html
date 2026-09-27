@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% from "_macros.html" import grid with context %}
+{% set page_id = "listing" %}
+{% block main %}
+{% if banner %}
+<div class="list-banner">{{ img(banner, title, "100vw", "", true, 1800) }}</div>
+{% endif %}
+<div class="wrap">
+  <header class="list-head">
+    <h1>{{ title }}</h1>
+    {% if intro %}<p class="lead">{{ intro }}</p>{% endif %}
+  </header>
+  <div class="filters">
+    <nav class="chips" aria-label="{{ t('filter.set') }}">
+      <a class="chip{{ ' on' if not set_type }}" href="{{ link(set='') }}">{{ t('filter.all') }}</a>
+      {% for k in ['couple', 'family', 'kids'] %}
+      <a class="chip{{ ' on' if set_type == k }}" href="{{ link(set=k) }}">{{ t('set.' ~ k) }}</a>
+      {% endfor %}
+    </nav>
+    <form class="filter-form" method="get" action="{{ base_path }}">
+      {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+      {% if set_type %}<input type="hidden" name="set" value="{{ set_type }}">{% endif %}
+      <label class="select"><span class="sr">{{ t('filter.cut') }}</span>
+        <select name="cut" data-autosubmit>
+          <option value="">{{ t('filter.cut') }}: {{ t('filter.all') }}</option>
+          {% for key in catalog.CUTS %}<option value="{{ key }}"{{ ' selected' if cut == key }}>{{ label(catalog.CUTS, key) }}</option>{% endfor %}
+        </select></label>
+      <label class="select"><span class="sr">{{ t('sort.label') }}</span>
+        <select name="sort" data-autosubmit>
+          {% for key in ['featured', 'new', 'popular', 'price_asc', 'price_desc'] %}<option value="{{ key }}"{{ ' selected' if sort == key }}>{{ t('sort.' ~ key) }}</option>{% endfor %}
+        </select></label>
+      <noscript><button class="btn small" type="submit">OK</button></noscript>
+    </form>
+  </div>
+  <p class="count muted">{{ t('list.count', n=total) }}{% if set_type or cut or query %} · <a href="{{ base_path }}">{{ t('filter.clear') }}</a>{% endif %}</p>
+  {% if cards %}
+    {{ grid(cards, 4) }}
+  {% else %}
+    <div class="empty"><p>{{ t('list.empty_search') if query else t('list.empty') }}</p><a class="btn ghost" href="/shop">{{ t('nav.all') }}</a></div>
+  {% endif %}
+  {% if pages_n > 1 %}
+  <nav class="pager" aria-label="Pages">
+    {% if page > 1 %}<a class="btn ghost small" href="{{ link(page=page - 1) }}">{{ t('page.prev') }}</a>{% endif %}
+    <span>{{ page }} / {{ pages_n }}</span>
+    {% if page < pages_n %}<a class="btn ghost small" href="{{ link(page=page + 1) }}">{{ t('page.next') }}</a>{% endif %}
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}

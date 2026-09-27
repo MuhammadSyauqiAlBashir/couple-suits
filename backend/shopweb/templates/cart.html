@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% set page_id = "cart" %}
+{% block main %}
+<div class="wrap narrow">
+  <h1 class="page-title">{{ t('cart.title') }}</h1>
+  <noscript><p class="notice">{{ t('noscript') }}</p></noscript>
+  <div class="cart-layout">
+    <div data-cart-lines class="cart-lines"><div class="skeleton"></div></div>
+    <aside class="summary-box" data-cart-summary hidden>
+      <form class="voucher" data-voucher>
+        <label><span class="sr">{{ t('cart.voucher') }}</span><input name="voucher" placeholder="{{ t('cart.voucher') }}" maxlength="40" autocapitalize="characters"></label>
+        <button class="btn ghost small" type="submit">{{ t('cart.apply') }}</button>
+      </form>
+      <p class="form-msg" data-voucher-msg></p>
+      <dl class="totals" data-totals></dl>
+      <a class="btn primary wide" href="/checkout" data-go-checkout>{{ t('cart.checkout') }}</a>
+      <p class="muted small">{{ tr(s, 'shipping_note') }}</p>
+    </aside>
+  </div>
+  <div class="empty" data-cart-empty hidden>
+    <p>{{ t('cart.empty') }}</p>
+    <a class="btn primary" href="/shop">{{ t('cart.continue') }}</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block main %}
+<article class="wrap narrow article">
+  <h1 class="page-title">{{ tr(page, 'title') }}</h1>
+  <div class="prose">{{ tr(page, 'body')|md }}</div>
+</article>
+{% endblock %}

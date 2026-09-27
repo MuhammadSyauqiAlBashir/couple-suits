@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{ title or brand }}</title>
+{% if description %}<meta name="description" content="{{ description[:300] }}">{% endif %}
+{% if noindex %}<meta name="robots" content="noindex">{% endif %}
+<link rel="canonical" href="{{ canonical }}">
+<link rel="alternate" hreflang="id" href="{{ canonical }}?lang=id">
+<link rel="alternate" hreflang="en" href="{{ canonical }}?lang=en">
+<meta property="og:site_name" content="{{ brand }}">
+<meta property="og:title" content="{{ title or brand }}">
+{% if description %}<meta property="og:description" content="{{ description[:300] }}">{% endif %}
+<meta property="og:type" content="{{ og_type or 'website' }}">
+<meta property="og:url" content="{{ canonical }}">
+{% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#fbfaf8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="{{ brand[:15] }}">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="/static/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/static/icons/icon-180.png">
+<link rel="preload" href="/static/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/static/fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{ static('css/shop.css') }}">
+<style>:root{--accent:{{ accent }}}</style>
+{% block head %}{% endblock %}
+<script type="module" src="{{ static('js/shop.js') }}"></script>
+</head>
+<body data-lang="{{ lang }}" data-customer="{{ '1' if customer else '0' }}" data-page="{{ page_id or '' }}">
+<svg width="0" height="0" class="sprite" aria-hidden="true">
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7zM9 9c0 3 3 6 6 6l1-1.5-2-1-1 1c-1-.5-2-1.5-2.5-2.5l1-1-1-2z"/></symbol>
+  <symbol id="i-ruler" viewBox="0 0 24 24"><path d="M3 16L16 3l5 5L8 21zM7 12l2 2M10 9l2 2M13 6l2 2"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2 20a7 7 0 0 1 14 0M16 4.5a3.5 3.5 0 0 1 0 6.5M18 13.5a6.5 6.5 0 0 1 4 6.5"/></symbol>
+  <symbol id="i-scissors" viewBox="0 0 24 24"><path d="M6 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8.1 7.9L20 20M8.1 16.1L20 4"/></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24"><path d="M2 6h12v10H2zM14 10h4l4 4v2h-8zM6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></symbol>
+</svg>
+<a class="skip" href="#main">Skip to content</a>
+{% set ann = tr(s, 'announcement') %}
+{% if ann %}<div class="announce">{{ ann }}</div>{% endif %}
+<header class="site-head">
+  <div class="head-row">
+    <div class="head-left">
+      <button class="icon-btn only-mobile" type="button" data-open="drawer" aria-label="{{ t('nav.menu') }}"><svg class="i"><use href="#i-menu"/></svg></button>
+      <nav class="main-nav only-desktop" aria-label="Main">
+        <a href="/shop">{{ t('nav.shop') }}</a>
+        <a href="/shop?set=couple">{{ t('nav.couple') }}</a>
+        <a href="/shop?set=family">{{ t('nav.family') }}</a>
+        <a href="/shop?set=kids">{{ t('nav.kids') }}</a>
+        <a href="/lookbook">{{ t('nav.lookbook') }}</a>
+      </nav>
+    </div>
+    <a class="logo" href="/" aria-label="{{ brand }}">
+      {% if s.logo %}<img src="/media/{{ s.logo }}/400.webp" alt="{{ brand }}" height="36">{% else %}{{ brand }}{% endif %}
+    </a>
+    <div class="head-right">
+      <button class="icon-btn" type="button" data-open="search" aria-label="{{ t('nav.search') }}"><svg class="i"><use href="#i-search"/></svg></button>
+      <a class="icon-btn only-desktop" href="/account" aria-label="{{ t('nav.account') }}"><svg class="i"><use href="#i-user"/></svg></a>
+      <a class="icon-btn" href="/wishlist" aria-label="{{ t('nav.wishlist') }}"><svg class="i"><use href="#i-heart"/></svg><b class="count" data-wish-count hidden></b></a>
+      <a class="icon-btn" href="/cart" aria-label="{{ t('nav.cart') }}"><svg class="i"><use href="#i-bag"/></svg><b class="count" data-cart-count hidden></b></a>
+    </div>
+  </div>
+</header>
+
+<dialog class="drawer" id="drawer" aria-label="{{ t('nav.menu') }}">
+  <div class="drawer-head"><span class="logo small">{{ brand }}</span><button class="icon-btn" type="button" data-close aria-label="{{ t('nav.close') }}"><svg class="i"><use href="#i-x"/></svg></button></div>
+  <nav class="drawer-nav">
+    <a href="/shop">{{ t('nav.all') }}</a>
+    <a href="/shop?set=couple">{{ t('nav.couple') }}</a>
+    <a href="/shop?set=family">{{ t('nav.family') }}</a>
+    <a href="/shop?set=kids">{{ t('nav.kids') }}</a>
+    <a href="/sale">{{ t('nav.sale') }}</a>
+    {% for c in categories %}<a class="sub" href="/c/{{ c.slug }}">{{ tr(c, 'name') }}</a>{% endfor %}
+    <a href="/lookbook">{{ t('nav.lookbook') }}</a>
+    <a href="/journal">{{ t('nav.journal') }}</a>
+    <a href="/size-guide">{{ t('nav.size_guide') }}</a>
+    <a href="/account">{{ t('nav.account') }}</a>
+    <a href="{{ lang_url('en' if lang == 'id' else 'id') }}" class="sub">{{ t('lang.switch') }}</a>
+  </nav>
+</dialog>
+
+<dialog class="search-box" id="search" aria-label="{{ t('nav.search') }}">
+  <form action="/shop" method="get" role="search">
+    <svg class="i"><use href="#i-search"/></svg>
+    <input type="search" name="q" placeholder="{{ t('search.placeholder') }}" aria-label="{{ t('nav.search') }}" maxlength="80" autocomplete="off">
+    <button class="icon-btn" type="button" data-close aria-label="{{ t('nav.close') }}"><svg class="i"><use href="#i-x"/></svg></button>
+  </form>
+</dialog>
+
+<main id="main">
+{% block main %}{% endblock %}
+</main>
+
+<footer class="site-foot">
+  <div class="foot-grid wrap">
+    <div class="foot-brand">
+      <div class="logo">{{ brand }}</div>
+      <p>{{ tr(s, 'tagline') }}</p>
+      <a class="btn ghost small" href="{{ wa }}" rel="noopener" target="_blank" data-ev="wa_click"><svg class="i"><use href="#i-wa"/></svg> WhatsApp</a>
+    </div>
+    <div>
+      <h3>{{ t('nav.shop') }}</h3>
+      <a href="/shop?sort=new">{{ t('nav.new') }}</a>
+      <a href="/shop?set=couple">{{ t('nav.couple') }}</a>
+      <a href="/shop?set=family">{{ t('nav.family') }}</a>
+      <a href="/shop?set=kids">{{ t('nav.kids') }}</a>
+      <a href="/sale">{{ t('nav.sale') }}</a>
+    </div>
+    <div>
+      <h3>{{ t('nav.help') }}</h3>
+      <a href="/size-guide">{{ t('nav.size_guide') }}</a>
+      {% for p in footer_pages %}<a href="/page/{{ p.slug }}">{{ tr(p, 'title') }}</a>{% endfor %}
+      <a href="/account">{{ t('nav.orders') }}</a>
+    </div>
+    <div>
+      <h3>{{ t('footer.follow') }}</h3>
+      {% if s.instagram %}<a href="https://instagram.com/{{ s.instagram|replace('@', '') }}" rel="noopener" target="_blank">Instagram</a>{% endif %}
+      {% if s.tiktok %}<a href="https://www.tiktok.com/@{{ s.tiktok|replace('@', '') }}" rel="noopener" target="_blank">TikTok</a>{% endif %}
+      <a href="/journal">{{ t('nav.journal') }}</a>
+      <a href="/lookbook">{{ t('nav.lookbook') }}</a>
+      <a href="{{ lang_url('en' if lang == 'id' else 'id') }}">{{ t('lang.switch') }}</a>
+    </div>
+  </div>
+  <div class="foot-base wrap"><span>© {{ brand }}. {{ t('footer.rights') }}</span>{% if s.city %}<span>{{ s.city }}</span>{% endif %}</div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<script type="application/json" id="i18n">{{ js_strings|tojson }}</script>
+{% block tail %}{% endblock %}
+</body>
+</html>

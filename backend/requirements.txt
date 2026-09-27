@@ -1,0 +1,10 @@
+fastapi==0.141.1
+uvicorn==0.54.0
+httpx==0.28.1
+python-multipart==0.0.32
+Jinja2==3.1.6
+pillow==12.3.0
+markdown-it-py==4.2.0
+pywebpush==2.5.0
+webauthn==3.0.1
+fpdf2==2.8.8
