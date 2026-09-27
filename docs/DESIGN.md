@@ -10,6 +10,7 @@ Repo `~/couple-suits` (working name); brand name and logo are entered later in t
 |---|---|
 | Sites | **Storefront** `shop.bashir.my.id` (desktop + mobile web, installable PWA). **Admin CMS** `shop-admin.bashir.my.id` (installable PWA, push, Face ID lock). Move to a brand domain before launch. |
 | Payments | **None.** Checkout creates an order; the owners contact the customer (manual WhatsApp chat via one-tap `wa.me` buttons in the CMS) to arrange payment and shipping. |
+| Shop WhatsApp | **+62 851-2106-9097** (`6285121069097`) for `wa.me` chat buttons. |
 | Order notifications | **Admin PWA push** (free) on new orders. No WhatsApp API: the official one costs per message; unofficial libraries (venom, Baileys) risk a ban and venom runs a full Chrome (too heavy). |
 | Shipping | Customer gives the address; **shipping cost is confirmed by the admin** and added to the order in the CMS. |
 | Sets | **Flexible "build your set"**: the customer adds any members with a role (spouse, dad, mom, son, daughter, sibling, baby, grandparent, custom) and a size each. A product declares which **cuts** exist (men, women, boys, girls, baby, unisex adult/kids) and which roles map to which cut. Single pieces are sold too. |
@@ -56,6 +57,21 @@ design board with notes, for any set of roles (e.g. dad + mom + daughter).
 | Gemini API Nano Banana 2 (Lite) | many images | ~$0.034–0.067/image, needs billing | Optional later |
 
 Text/vision work (analysis, tech pack, size charts, translations) uses the existing **free Gemini** key.
+
+**Verified 2026-09-27** (public-domain Connolly dress sketch + Peter Pan collar drawing + ticking-stripe fabric photo;
+test files in `~/work/sketches/`, not for commercial use):
+- Gemini (free) turned the three images into an accurate brief (1960s sheath dress, Peter Pan collar, cream ticking
+  stripe, cream dome buttons) and a coherent family set (mom dress, dad club-collar shirt, daughter A-line dress).
+- FLUX.2 [klein] 4B, 3 reference images, 4 seeds: all 4 options followed the sketch silhouette/pose, the collar, the
+  fabric and the buttons. ~7–9 s per image.
+- **Front/back technical flat** from the chosen option: excellent (collar, placket, waist band, pleats, back zip,
+  dashed stitching).
+- **Pitfall:** a reference image that contains a *person* makes the model copy that person (the "dad" became a woman).
+  **Rule:** for other family members, pass only garment references (the flat sketch + fabric/detail crops) and
+  describe the wearer in the prompt. With that, dad and a 6-year-old girl came out correct and matching on both 4B and
+  9B (9B ~2.5 s but ~12× the neurons; 4B quality was as good or better here).
+- Pipeline: brief (Gemini) → primary options from sketch + details → choose → flat front/back → each other role from
+  flat + fabric → mockup board (composed from the role images) → tech pack + size charts (Gemini) → PDF.
 Limits: AI output is a concept + draft spec. Sewing patterns still come from a pattern maker/tailor.
 To verify first: FLUX.2 [klein] quality on real sketches (test before building the studio).
 
@@ -107,8 +123,8 @@ shipped/done/cancelled, customer or guest contact, address, items, discounts, sh
 
 ## 6. Needed from the owner (when we get there)
 
-- Free **Cloudflare account** + a Workers AI API token (studio; later optionally the CDN).
-- Free **Brevo** (or similar) account for customer emails; DNS changes for SPF/DKIM.
-- Shop **WhatsApp number** (for `wa.me` buttons), brand name/logo (later, in the CMS).
-- A few real **sketches** from his wife to test the AI engine.
+- ~~Free Cloudflare account + Workers AI API token~~ **done 2026-09-27** (`/etc/couple-suits/env`: CF_ACCOUNT_ID, CF_API_TOKEN).
+- Free **Brevo** account for customer emails; DNS changes for SPF/DKIM — **postponed by the owner** (phase 2).
+- ~~Shop WhatsApp number~~ done (6285121069097). Brand name/logo later, in the CMS.
+- ~~Test sketches~~ tested with public-domain sketches instead (see §2). Real sketches from his wife welcome later.
 - Product photos for real listings.
