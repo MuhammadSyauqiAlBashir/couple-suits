@@ -43,3 +43,16 @@ Scratch PocketBase + both services on other ports (see `~/work/cs-run.sh`, `~/wo
 - Customer password reset (no email yet): Customers → Set a new password → send on WhatsApp.
 - Demo catalog: `tools/demo_catalog.py images|seed`; remove in Settings → Remove demo catalog.
 - Studio files are private in `/var/lib/couple-suits-admin/studio/`; public images in `/var/lib/couple-suits/media/`.
+
+## Limits and renewals
+
+- **Images (Cloudflare FLUX.2 klein 4B, free):** ~75–80 per day (10,000 neurons; ~126 per image; the "High quality"
+  9B model costs ~12×). Resets 07:00 WIB. One full studio design ≈ 8–10 images. Shown in the studio as "Images today".
+- **Text AI (Gemini, free):** per-model daily limits, resets at midnight Pacific (14:00 WIB; 15:00 WIB in winter).
+  Shared with the finance app; the client falls back to other models when one is busy or used up.
+- **Studio inputs:** upload as many as you like (≤25 MB each), but: analyse reads the first 6 inputs; options use the
+  first sketch + first 3 detail crops; flats use the chosen option + first 2 details; other family members use the
+  front flat + first 3 details. Best: 1 sketch + up to 3 tight detail crops.
+- **Renewals:** only the VPS (monthly) and the domain (yearly). HTTPS certificates renew automatically; the Cloudflare
+  token and Gemini key have no expiry. If a provider retires a model, update the model names in `cs/ai.py` / `cs/flux.py`.
+

@@ -139,10 +139,15 @@ shipped/done/cancelled, customer or guest contact, address, items, discounts, sh
 3. **AI design studio** (after testing FLUX.2 [klein] on real sketches).
 4. **Launch polish:** SEO, performance, optional Cloudflare CDN, backups, brand domain.
 
-## 6. Needed from the owner (when we get there)
+## 6. Needed from the owner
 
-- ~~Free Cloudflare account + Workers AI API token~~ **done 2026-09-27** (`/etc/couple-suits/env`: CF_ACCOUNT_ID, CF_API_TOKEN).
-- Free **Brevo** account for customer emails; DNS changes for SPF/DKIM — **postponed by the owner** (phase 2).
-- ~~Shop WhatsApp number~~ done (6285121069097). Brand name/logo later, in the CMS.
-- ~~Test sketches~~ tested with public-domain sketches instead (see §2). Real sketches from his wife welcome later.
-- Product photos for real listings.
+Done: Cloudflare account + token (now in `/etc/couple-suits/admin.env`), WhatsApp number 6285121069097, AI test
+with public-domain sketches.
+
+Open (as of 2026-09-27):
+- Install the admin PWA on both iPhones; turn on notifications and the Face ID lock (Settings).
+- Settings: brand name, logo, bank details, social accounts.
+- Review the privacy-policy draft; write "Tentang kami".
+- Test order + cancel; then real products/photos (or from the AI studio) and remove the demo catalog.
+- **Brevo** email (SPF merge + DKIM) — postponed; enables verification and password-reset emails.
+- Before real customers: automated encrypted backups (server-side build).
