@@ -4,6 +4,22 @@ Online shop for **matching clothing for couples and whole families** (spouses, p
 admin CMS with an **AI design studio** for the owner's wife. Decisions from the owner interview on 2026-09-27.
 Repo `~/couple-suits` (working name); brand name and logo are entered later in the CMS.
 
+## 0. Status (2026-09-27)
+
+**Built and deployed — all four phases.** https://shop.bashir.my.id (storefront) and
+https://shop-admin.bashir.my.id (admin PWA). Demo catalog of 8 products with AI photos (flagged `demo`).
+
+As built, differences from the plan below:
+- Email (Brevo) postponed by the owner: no verification/reset emails. Customers reset via the admin
+  (Customers → Set a new password, sent on WhatsApp). Order links use a secret token instead of email.
+- Cart lives in the browser (localStorage); the server re-prices on every quote and at checkout.
+- Analytics: daily counters in `shop_stats` (visitors via a daily-rotating salted hash, never stored).
+- Family-set discount defaults: 3+ people 5 %, 5+ people 10 % (editable in Promotions).
+- Special-day vouchers: created 7 days before a birthday/anniversary for customers who allow offers;
+  shown in their account; admins get a push to send a WhatsApp greeting.
+- Tech-pack size charts = standard Asian tables graded by fit (ease) and length from the AI spec, not free-form
+  AI numbers.
+
 ## 1. Decisions
 
 | Topic | Decision |
@@ -100,6 +116,8 @@ both ──▶ PocketBase (shared, collections `shop_*`, service-role rules)
 
 ## 4. Data model (PocketBase, prefix `shop_`)
 
+*(Planned list; as built see `pb_migrations/1790700000_shop_init.js`: settings live in `shop_kv`, design
+inputs/outputs in `shop_design_assets`, stats in `shop_stats`, plus `shop_admins`, `shop_events`.)*
 `shop_settings` (brand, logo, colours, WhatsApp number, texts) · `shop_categories` · `shop_collections` ·
 `shop_products` (bilingual name/description, status draft/live, stock mode ready/preorder + lead days, base price,
 sale price + window, cuts, tags, SEO) · `shop_variants` (product, cut, size, colour, stock, price override) ·
