@@ -6,7 +6,7 @@ import json
 import re
 import time
 from collections import Counter, defaultdict
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
@@ -77,6 +77,13 @@ async def dashboard(days: int = 30, user: User = Depends(admin)):
                        "cut": v["cut"], "size": v["size"], "color": v.get("color", ""), "stock": v["stock"]}
                       for v in low[:30]],
     }
+
+
+@router.get("/badges")
+async def badges(user: User = Depends(admin)):
+    orders = await pb.list("shop_orders", filter="status = 'new'", per_page=1, skip_total=False)
+    reviews = await pb.list("shop_reviews", filter="status = 'pending'", per_page=1, skip_total=False)
+    return {"orders": orders.get("totalItems", 0), "reviews": reviews.get("totalItems", 0)}
 
 
 # ---------------------------------------------------------------------------
@@ -348,5 +355,3 @@ async def translate(body: TranslateIn, user: User = Depends(admin)):
         raise HTTPException(503, f"AI is busy right now, try again in a minute. ({str(e)[:120]})")
     return {"text": text.strip()}
 
-
-_ = (datetime,)

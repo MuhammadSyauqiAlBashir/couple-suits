@@ -12,7 +12,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
-from cs import util
+from cs import config, util
 from cs.pb import PBError, pb
 
 from . import bootstrap, routes_catalog, routes_content, routes_core, routes_orders, scheduler, studio
@@ -43,6 +43,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
 for r in (routes_core.router, routes_catalog.router, routes_orders.router, routes_content.router, studio.router):
     app.include_router(r)
+
 
 
 @app.exception_handler(HTTPException)
@@ -112,9 +113,19 @@ async def logout(request: Request, response: Response):
 @app.get("/api/me")
 async def me(user: User = Depends(signed_in)):
     s = await util.settings()
-    return {"user": public_user(user), "locked": not _locks[user.sid].unlocked, "brand": s["brand_name"]}
+    return {"user": public_user(user), "locked": not _locks[user.sid].unlocked, "brand": s["brand_name"],
+            "shop_url": config.SHOP_URL}
 
 
 @app.get("/api/health")
 async def health():
     return {"ok": True}
+
+
+if config.DEV:  # in production Caddy serves the app and /media
+    import os
+
+    from fastapi.staticfiles import StaticFiles
+    os.makedirs(config.MEDIA_DIR, exist_ok=True)
+    app.mount("/media", StaticFiles(directory=config.MEDIA_DIR), name="media")
+    app.mount("/", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "..", "..", "admin-ui"), html=True), name="ui")

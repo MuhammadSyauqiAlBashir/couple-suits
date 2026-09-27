@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f4f0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Shop Admin">
+<meta name="robots" content="noindex, nofollow">
+<title>Shop Admin</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="stylesheet" href="/app.css?v=__VERSION__">
+<script type="module" src="/js/app.js?v=__VERSION__"></script>
+</head>
+<body>
+<div id="splash" class="center-view"><img src="/icons/icon-192.png" width="64" height="64" alt="" class="splash-icon"></div>
+<main id="authView" class="center-view" hidden></main>
+<main id="lockView" class="center-view" hidden></main>
+
+<div id="appView" hidden>
+  <nav class="side" aria-label="Sections">
+    <div class="side-brand"><img src="/icons/icon-192.png" width="32" height="32" alt=""><span id="brandName">Shop Admin</span></div>
+    <a href="#dashboard" data-tab="dashboard"><span class="tab-ico" data-icon="home"></span><span>Dashboard</span></a>
+    <a href="#orders" data-tab="orders"><span class="tab-ico" data-icon="bag"></span><span>Orders</span><b class="badge" data-badge="orders" hidden></b></a>
+    <a href="#products" data-tab="products"><span class="tab-ico" data-icon="box"></span><span>Products</span></a>
+    <a href="#studio" data-tab="studio"><span class="tab-ico" data-icon="spark"></span><span>AI Studio</span></a>
+    <a href="#customers" data-tab="customers"><span class="tab-ico" data-icon="users"></span><span>Customers</span></a>
+    <a href="#reviews" data-tab="reviews"><span class="tab-ico" data-icon="star"></span><span>Reviews</span><b class="badge" data-badge="reviews" hidden></b></a>
+    <a href="#promos" data-tab="promos"><span class="tab-ico" data-icon="tag"></span><span>Promotions</span></a>
+    <a href="#content" data-tab="content"><span class="tab-ico" data-icon="layout"></span><span>Content</span></a>
+    <a href="#catalog" data-tab="catalog"><span class="tab-ico" data-icon="grid"></span><span>Categories &amp; sizes</span></a>
+    <a href="#settings" data-tab="settings"><span class="tab-ico" data-icon="gear"></span><span>Settings</span></a>
+    <a class="side-shop" id="shopLink" href="#" target="_blank" rel="noopener"><span class="tab-ico" data-icon="store"></span><span>Open shop</span></a>
+  </nav>
+  <main id="page" class="page"></main>
+  <nav class="tabbar" aria-label="Sections">
+    <a href="#dashboard" data-tab="dashboard"><span class="tab-ico" data-icon="home"></span><span>Home</span></a>
+    <a href="#orders" data-tab="orders"><span class="tab-ico" data-icon="bag"></span><span>Orders</span><b class="badge" data-badge="orders" hidden></b></a>
+    <a href="#products" data-tab="products"><span class="tab-ico" data-icon="box"></span><span>Products</span></a>
+    <a href="#studio" data-tab="studio"><span class="tab-ico" data-icon="spark"></span><span>Studio</span></a>
+    <a href="#more" data-tab="more"><span class="tab-ico" data-icon="more"></span><span>More</span><b class="badge" data-badge="reviews" hidden></b></a>
+  </nav>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

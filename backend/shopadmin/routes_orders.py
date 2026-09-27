@@ -15,13 +15,13 @@ from .security import User, admin
 router = APIRouter(prefix="/api")
 
 STATUSES = ["new", "confirmed", "awaiting_payment", "paid", "in_production", "shipped", "completed", "cancelled"]
-STATUS_LABEL = {"new": "Baru", "confirmed": "Dikonfirmasi", "awaiting_payment": "Menunggu bayar", "paid": "Dibayar",
-                "in_production": "Diproduksi", "shipped": "Dikirim", "completed": "Selesai", "cancelled": "Dibatalkan"}
+STATUS_LABEL = {"new": "New", "confirmed": "Confirmed", "awaiting_payment": "Awaiting payment", "paid": "Paid",
+                "in_production": "In production", "shipped": "Shipped", "completed": "Completed", "cancelled": "Cancelled"}
 
 # WhatsApp message templates. {placeholders} are filled from the order. Editable in Settings.
 WA_TEMPLATES = {
     "confirm": {
-        "label": "Konfirmasi + ongkir",
+        "label": "Confirm + shipping cost",
         "id": "Halo {name}, terima kasih sudah memesan di {brand} 🙏\n\nPesanan *{number}*:\n{items}\n\nSubtotal: {total}\n"
               "Ongkir ke {city}: {shipping}\n*Total bayar: {grand}*\n\n{bank}\n\nMohon kirim bukti transfer di chat ini ya. "
               "Status pesanan: {link}",
@@ -30,28 +30,28 @@ WA_TEMPLATES = {
               "chat. Order status: {link}",
     },
     "reminder": {
-        "label": "Pengingat bayar",
+        "label": "Payment reminder",
         "id": "Halo {name}, mengingatkan pesanan *{number}* sebesar *{grand}* belum kami terima pembayarannya. "
               "Kalau sudah transfer, kirim buktinya di sini ya. Terima kasih!",
         "en": "Hi {name}, a gentle reminder that we haven't received payment for order *{number}* (*{grand}*) yet. "
               "If you've paid, please send the receipt here. Thank you!",
     },
     "paid": {
-        "label": "Pembayaran diterima",
+        "label": "Payment received",
         "id": "Halo {name}, pembayaran untuk pesanan *{number}* sudah kami terima. {production}Kami kabari lagi saat dikirim. "
               "Status: {link}",
         "en": "Hi {name}, we've received payment for order *{number}*. {production}We'll let you know when it ships. "
               "Status: {link}",
     },
     "shipped": {
-        "label": "Sudah dikirim",
+        "label": "Shipped + tracking",
         "id": "Halo {name}, pesanan *{number}* sudah dikirim via {courier}. No. resi: *{tracking}*. Semoga suka! "
               "Setelah sampai, boleh minta ulasan dan foto keluarga di sini: {link}",
         "en": "Hi {name}, order *{number}* is on its way with {courier}. Tracking number: *{tracking}*. We hope you love it! "
               "Once it arrives, we'd love a review and a family photo here: {link}",
     },
     "thanks": {
-        "label": "Terima kasih + ulasan",
+        "label": "Thank you + review",
         "id": "Halo {name}, terima kasih sudah berbelanja di {brand}. Kalau berkenan, bagikan ulasan dan foto keluarga "
               "di sini ya: {link} 💛",
         "en": "Hi {name}, thank you for shopping with {brand}. If you have a moment, we'd love a review and a family "
