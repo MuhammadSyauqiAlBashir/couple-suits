@@ -1,0 +1,20 @@
+<div class="row2">
+  <label class="field"><span>{{ t('p.role') }}</span>
+    <select name="role" data-role>
+      {% for r in roles %}<option value="{{ r.id }}"{{ ' selected' if m.role == r.id }}>{{ r.label }}</option>{% endfor %}
+      {% if m.role and m.role not in catalog.ROLES %}<option value="{{ m.role }}" selected>{{ m.role }}</option>{% endif %}
+    </select></label>
+  <label class="field"><span>{{ t('p.name') }}</span><input name="name" maxlength="80" value="{{ m.name or '' }}"></label>
+</div>
+<div class="row3">
+  <label class="field"><span>{{ t('p.cut') }}</span>
+    <select name="cut" data-cut required>
+      {% for key in catalog.CUTS %}<option value="{{ key }}"{{ ' selected' if m.cut == key }}>{{ label(catalog.CUTS, key) }}</option>{% endfor %}
+    </select></label>
+  <label class="field"><span>{{ t('p.size') }}</span>
+    <select name="size" data-size>
+      <option value="">—</option>
+      {% for key in catalog.CUTS %}<optgroup label="{{ label(catalog.CUTS, key) }}" data-for="{{ key }}">{% for sz in cut_sizes[key] %}<option value="{{ sz.id }}"{{ ' selected' if m.size == sz.id and m.cut == key }}>{{ sz.label }}</option>{% endfor %}</optgroup>{% endfor %}
+    </select></label>
+  <label class="field"><span>{{ t('a.birthday') }}</span><input type="date" name="birthday" value="{{ m.birthday or '' }}"></label>
+</div>

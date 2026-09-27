@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% set noindex = true %}
+{% block main %}
+<div class="wrap narrow center error-page">
+  {% if code == 404 %}
+  <h1>{{ t('err.404') }}</h1><p class="muted">{{ t('err.404_text') }}</p>
+  {% elif code == 'offline' %}
+  <h1>Offline</h1><p class="muted">{{ t('err.500_text') }}</p>
+  {% elif message %}
+  <h1>{{ message }}</h1>
+  {% else %}
+  <h1>{{ t('err.500') }}</h1><p class="muted">{{ t('err.500_text') }}</p>
+  {% endif %}
+  <a class="btn primary" href="/">{{ t('err.home') }}</a>
+</div>
+{% endblock %}

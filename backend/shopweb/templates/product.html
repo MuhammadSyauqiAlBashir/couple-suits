@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% from "_macros.html" import price, stars, grid, head, chart_table with context %}
+{% set page_id = "product" %}
+{% set og_type = "product" %}
+{% block head %}<script type="application/ld+json">{{ ld|safe }}</script>{% endblock %}
+{% block main %}
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/shop">{{ t('nav.shop') }}</a>
+    {% if category %}<span>/</span><a href="/c/{{ category.slug }}">{{ tr(category, 'name') }}</a>{% endif %}
+  </nav>
+  <div class="pdp">
+    <div class="gallery">
+      <div class="gallery-track" data-gallery>
+        {% for key in p.media or [''] %}
+        <figure class="shot">{{ img(key, card.name ~ ' ' ~ loop.index, "(max-width: 900px) 100vw, 58vw", "", loop.first, 1200) }}</figure>
+        {% endfor %}
+      </div>
+      {% if (p.media or [])|length > 1 %}<div class="dots" aria-hidden="true">{% for key in p.media %}<i></i>{% endfor %}</div>{% endif %}
+    </div>
+
+    <div class="buy">
+      <div class="buy-inner">
+        {% if card.preorder %}<p class="eyebrow">{{ t('badge.preorder') }}</p>{% endif %}
+        <h1>{{ card.name }}</h1>
+        {% if card.rating %}<a href="#reviews" class="rating-link">{{ stars(card.rating) }} <span class="muted small">{{ t('p.rating', r=card.rating, n=card.reviews) }}</span></a>{% endif %}
+        <div class="buy-price">{{ price(card) }}{% if card.on_sale %} <b class="badge sale">−{{ card.sale_percent }}%</b>{% endif %}</div>
+        {% if data.sale_end %}<p class="countdown" data-countdown="{{ data.sale_end }}">{{ t('sale.ends') }} <b></b></p>{% endif %}
+        {% if card.summary %}<p class="summary">{{ card.summary }}</p>{% endif %}
+
+        <ul class="cut-prices">
+          {% for c in data.cuts %}<li><span>{{ c.label }}</span><span>{% if c.regular != c.price %}<s>{{ c.regular|rupiah }}</s> {% endif %}{{ c.price|rupiah }}</span></li>{% endfor %}
+        </ul>
+
+        {% if data.colors %}
+        <fieldset class="colors" data-colors>
+          <legend>{{ t('p.color') }}: <b data-color-name>{{ data.colors[0].name }}</b></legend>
+          {% for c in data.colors %}
+          <label class="swatch" title="{{ c.name }}"><input type="radio" name="color" value="{{ c.key }}"{{ ' checked' if loop.first }}><i data-hex="{{ c.hex }}"></i><span class="sr">{{ c.name }}</span></label>
+          {% endfor %}
+        </fieldset>
+        {% endif %}
+
+        <section class="builder" data-builder aria-label="{{ t('p.build') }}">
+          <div class="builder-head">
+            <h2>{{ t('p.build') }}</h2>
+            <button class="link-btn" type="button" data-open="sizechart"><svg class="i"><use href="#i-ruler"/></svg> {{ t('p.size_chart') }}</button>
+          </div>
+          <p class="muted small">{{ t('p.build_hint') }}</p>
+          <noscript><p class="notice">{{ t('noscript') }}</p></noscript>
+          <div class="builder-app" data-builder-app></div>
+        </section>
+
+        {% if data.set_rules %}
+        <p class="set-rule"><svg class="i"><use href="#i-users"/></svg>
+          {% for r in data.set_rules %}{{ t('p.discount_rule', p=r.percent, n=r.min) }}{{ ' · ' if not loop.last }}{% endfor %}</p>
+        {% endif %}
+
+        <p class="stock-note">
+          {% if data.preorder %}{{ t('p.preorder_note', d=data.preorder_days or 14) }}{% else %}{{ t('p.ready_note') }}{% endif %}
+        </p>
+        <div class="buy-links">
+          <button class="btn ghost small" type="button" data-wish="{{ p.id }}" aria-pressed="false"><svg class="i"><use href="#i-heart"/></svg> <span data-wish-label>{{ t('p.wish') }}</span></button>
+          <a class="btn ghost small" href="{{ wa_ask }}" target="_blank" rel="noopener" data-ev="wa_click"><svg class="i"><use href="#i-wa"/></svg> {{ t('p.ask') }}</a>
+        </div>
+
+        <div class="accordion">
+          {% set desc = tr(p, 'description') %}
+          {% if desc %}<details open><summary>{{ t('p.details') }}<svg class="i"><use href="#i-chev"/></svg></summary><div class="prose">{{ desc|md }}</div></details>{% endif %}
+          {% set mat = tr(p, 'material') %}{% set care = tr(p, 'care') %}
+          {% if mat or care %}<details><summary>{{ t('p.material') }}<svg class="i"><use href="#i-chev"/></svg></summary><div class="prose">{{ mat|md }}{{ care|md }}</div></details>{% endif %}
+          <details><summary>{{ t('p.size_chart') }}<svg class="i"><use href="#i-chev"/></svg></summary>
+            <div>{% for c in charts %}{{ chart_table(c) }}{% endfor %}<p class="muted small">{{ t('p.measure_tip') }}</p></div></details>
+          <details><summary>{{ t('p.shipping') }}<svg class="i"><use href="#i-chev"/></svg></summary>
+            <div class="prose"><p>{{ tr(s, 'shipping_note') }}</p><p>{{ tr(s, 'payment_info') }}</p></div></details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="block" id="reviews">
+    {{ head(t('p.reviews')) }}
+    {% if reviews %}
+    <div class="reviews">
+      {% for r in reviews %}
+      <article class="review">
+        <header>{{ stars(r.rating) }}<b>{{ r.name }}</b>{% if r.family %}<span class="muted"> · {{ r.family }}</span>{% endif %}</header>
+        {% if r.text %}<p>{{ r.text }}</p>{% endif %}
+        {% if r.photos %}<div class="review-photos">{% for k in r.photos %}<a href="/media/{{ k }}/1800.webp" target="_blank" rel="noopener">{{ img(k, r.family or r.name, "160px", "", false, 400) }}</a>{% endfor %}</div>{% endif %}
+        {% if r.reply %}<p class="reply"><b>{{ brand }}:</b> {{ r.reply }}</p>{% endif %}
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}<p class="muted">{{ t('p.no_reviews') }}</p>{% endif %}
+  </section>
+
+  {% if recs %}
+  <section class="block">
+    {{ head(t('p.also')) }}
+    {{ grid(recs) }}
+  </section>
+  {% endif %}
+</div>
+
+<dialog class="modal" id="sizechart" aria-label="{{ t('p.size_chart') }}">
+  <div class="modal-head"><h2>{{ t('p.size_chart') }}</h2><button class="icon-btn" type="button" data-close aria-label="{{ t('nav.close') }}"><svg class="i"><use href="#i-x"/></svg></button></div>
+  <div class="modal-body">
+    {% for c in charts %}{{ chart_table(c) }}{% endfor %}
+    <p class="muted small">{{ t('p.measure_tip') }}</p>
+    <a class="btn ghost small" href="{{ wa_ask }}" target="_blank" rel="noopener"><svg class="i"><use href="#i-wa"/></svg> {{ t('p.ask') }}</a>
+  </div>
+</dialog>
+
+<div class="added-bar" data-added hidden>
+  <span>{{ t('p.added') }}</span><a class="btn small" href="/cart">{{ t('p.view_cart') }}</a>
+</div>
+<script type="application/json" id="product-data">{{ data|tojson }}</script>
+{% endblock %}

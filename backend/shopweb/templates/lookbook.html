@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "_macros.html" import grid with context %}
+{% block main %}
+<article class="lookbook">
+  <header class="lb-hero">
+    {{ img(lb.cover, tr(lb, 'title'), "100vw", "", true, 1800) }}
+    <div class="lb-title"><p class="eyebrow">{{ t('lookbook.title') }}</p><h1>{{ tr(lb, 'title') }}</h1></div>
+  </header>
+  <div class="wrap narrow"><p class="lead center">{{ tr(lb, 'intro') }}</p></div>
+  {% for b in blocks %}
+  <section class="lb-block wrap{{ ' flip' if loop.index is even }}">
+    <div class="lb-img">{{ img(b.image, tr(b, 'caption'), "(max-width: 800px) 100vw, 60vw", "", false, 1800) }}</div>
+    <div class="lb-side">
+      {% set cap = tr(b, 'caption') %}{% if cap %}<p class="lb-caption">{{ cap }}</p>{% endif %}
+      {% if b.cards %}<p class="eyebrow">{{ t('lookbook.shop') }}</p>{{ grid(b.cards) }}{% endif %}
+    </div>
+  </section>
+  {% endfor %}
+</article>
+{% endblock %}

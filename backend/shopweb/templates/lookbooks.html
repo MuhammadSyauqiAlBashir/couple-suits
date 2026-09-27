@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block main %}
+<div class="wrap">
+  <h1 class="page-title">{{ t('lookbook.title') }}</h1>
+  {% for lb in lookbooks %}
+  <a class="banner tall" href="/lookbook/{{ lb.slug }}">
+    {{ img(lb.cover, tr(lb, 'title'), "100vw", "", loop.first, 1800) }}
+    <span class="banner-text"><b>{{ tr(lb, 'title') }}</b><span>{{ tr(lb, 'intro')|truncate(140) }}</span></span>
+  </a>
+  {% else %}<p class="muted">{{ t('list.empty') }}</p>{% endfor %}
+</div>
+{% endblock %}

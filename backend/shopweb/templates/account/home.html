@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block main %}
+<div class="wrap narrow account">
+  <div class="acct-head">
+    <h1 class="page-title">{{ t('a.hello', name=(customer.name or customer.email).split(' ')[0]) }}</h1>
+    <form method="post" action="/account/logout"><button class="btn ghost small" type="submit">{{ t('a.logout') }}</button></form>
+  </div>
+  {% if saved %}<p class="notice ok">{{ t('a.saved') }}</p>{% endif %}
+
+  {% if vouchers %}
+  <section class="block-sm">
+    <h2>{{ t('a.vouchers') }}</h2>
+    <div class="vouchers">
+      {% for v in vouchers %}
+      <div class="voucher-card"><b>{{ v.code }}</b><span>{{ tr(v, 'label') or ((v.value ~ '%') if v.kind == 'percent' else v.value|rupiah) }}</span>
+        {% if v.ends %}<span class="muted small">{{ t('a.valid_until', d=v.ends[:10]) }}</span>{% endif %}</div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <section class="block-sm">
+    <div class="sec-head"><h2>{{ t('a.family') }}</h2><a class="more" href="/account/family">{{ t('a.add_member') if not members else t('a.save') }} <svg class="i"><use href="#i-arrow"/></svg></a></div>
+    {% if members %}
+    <ul class="members-list">{% for m in members %}<li><b>{{ m.name or label(catalog.ROLES, m.role) }}</b> <span class="muted">{{ label(catalog.ROLES, m.role) }} · {{ label(catalog.CUTS, m.cut) }}{% if m.size %} · {{ size_label(m.size) }}{% endif %}</span></li>{% endfor %}</ul>
+    {% else %}<p class="muted">{{ t('a.family_hint') }}</p>{% endif %}
+  </section>
+
+  <section class="block-sm">
+    <h2>{{ t('a.orders') }}</h2>
+    {% if orders %}
+    <ul class="order-list">
+      {% for o in orders %}
+      <li><a href="/order/{{ o.number }}"><b>{{ o.number }}</b><span class="muted">{{ o.created[:10] }}</span><span class="pill">{{ t('st.' ~ o.status) }}</span><span>{{ o.total|rupiah }}</span></a></li>
+      {% endfor %}
+    </ul>
+    {% else %}<p class="muted">{{ t('a.no_orders') }}</p>{% endif %}
+  </section>
+
+  <section class="block-sm">
+    <h2>{{ t('a.profile') }}</h2>
+    <form method="post" action="/account/profile" class="stack">
+      <label class="field"><span>{{ t('a.name') }}</span><input name="name" maxlength="120" value="{{ customer.name or '' }}"></label>
+      <label class="field"><span>{{ t('co.phone') }}</span><input name="phone" type="tel" maxlength="30" value="{{ customer.phone or '' }}"></label>
+      <div class="row2">
+        <label class="field"><span>{{ t('a.birthday') }}</span><input name="birthday" type="date" value="{{ customer.birthday or '' }}"></label>
+        <label class="field"><span>{{ t('a.anniversary') }}</span><input name="anniversary" type="date" value="{{ customer.anniversary or '' }}"></label>
+      </div>
+      <p class="muted small">{{ t('a.special') }}</p>
+      <label class="field short"><span>{{ t('a.lang') }}</span><select name="lang"><option value="id"{{ ' selected' if lang == 'id' }}>Bahasa Indonesia</option><option value="en"{{ ' selected' if lang == 'en' }}>English</option></select></label>
+      <label class="check"><input type="checkbox" name="marketing" value="1"{{ ' checked' if customer.marketing_ok }}> {{ t('a.marketing') }}</label>
+      <button class="btn primary" type="submit">{{ t('a.save') }}</button>
+    </form>
+  </section>
+
+  <section class="block-sm">
+    <details><summary>{{ t('a.change_password') }}<svg class="i"><use href="#i-chev"/></svg></summary>
+      <form method="post" action="/account/password" class="stack">
+        <input type="email" name="username" autocomplete="username" value="{{ customer.email }}" hidden>
+        <label class="field"><span>{{ t('a.old_password') }}</span><input name="old" type="password" autocomplete="current-password" required maxlength="72"></label>
+        <label class="field"><span>{{ t('a.new_password') }}</span><input name="new" type="password" autocomplete="new-password" required minlength="8" maxlength="72"></label>
+        <button class="btn ghost" type="submit">{{ t('a.save') }}</button>
+      </form>
+    </details>
+  </section>
+</div>
+{% endblock %}

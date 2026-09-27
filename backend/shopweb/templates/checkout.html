@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% set page_id = "checkout" %}
+{% block main %}
+<div class="wrap narrow">
+  <h1 class="page-title">{{ t('co.title') }}</h1>
+  <noscript><p class="notice">{{ t('noscript') }}</p></noscript>
+  <div class="checkout">
+    <form class="co-form" data-checkout novalidate>
+      {% if not customer %}<p class="muted small">{{ tl('co.login_hint', '/account/login?next=/checkout', 'co.login') }}</p>{% endif %}
+      <fieldset>
+        <legend>{{ t('co.contact') }}</legend>
+        <label class="field"><span>{{ t('co.name') }}</span><input name="name" autocomplete="name" required maxlength="120" value="{{ customer.name if customer else '' }}"></label>
+        <label class="field"><span>{{ t('co.phone') }}</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="30" placeholder="0812…" value="{{ customer.phone if customer else '' }}"></label>
+        <label class="field"><span>{{ t('co.email') }}</span><input name="email" type="email" autocomplete="email" maxlength="200" value="{{ customer.email if customer else '' }}"></label>
+      </fieldset>
+      <fieldset>
+        <legend>{{ t('co.address') }}</legend>
+        <label class="field"><span>{{ t('co.street') }}</span><textarea name="street" rows="2" autocomplete="street-address" required maxlength="500">{{ last_address.street or '' }}</textarea></label>
+        <div class="row2">
+          <label class="field"><span>{{ t('co.city') }}</span><input name="city" autocomplete="address-level2" required maxlength="100" value="{{ last_address.city or '' }}"></label>
+          <label class="field"><span>{{ t('co.province') }}</span><input name="province" autocomplete="address-level1" maxlength="100" value="{{ last_address.province or '' }}"></label>
+        </div>
+        <label class="field short"><span>{{ t('co.postal') }}</span><input name="postal" inputmode="numeric" autocomplete="postal-code" maxlength="10" value="{{ last_address.postal or '' }}"></label>
+        <label class="field"><span>{{ t('co.note') }}</span><textarea name="note" rows="2" maxlength="2000" placeholder="{{ t('co.note_ph') }}"></textarea></label>
+        <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        {% if customer %}<label class="check"><input type="checkbox" name="save" checked> {{ t('co.save') }}</label>{% endif %}
+      </fieldset>
+      <div class="how">
+        <h3>{{ t('co.how') }}</h3>
+        <ol><li>{{ t('co.how1') }}</li><li>{{ t('co.how2') }}</li><li>{{ t('co.how3') }}</li></ol>
+      </div>
+      <p class="form-msg" role="alert" data-co-msg></p>
+      <button class="btn primary wide big" type="submit" data-co-submit>{{ t('co.place') }}</button>
+      <p class="muted small center">{% if privacy %}{{ tl('co.privacy', '/page/' ~ privacy.slug, 'co.privacy_link') }}{% endif %}</p>
+    </form>
+    <aside class="summary-box">
+      <h2>{{ t('co.summary') }}</h2>
+      <div data-co-lines class="co-lines"><div class="skeleton"></div></div>
+      <form class="voucher" data-voucher>
+        <label><span class="sr">{{ t('cart.voucher') }}</span><input name="voucher" placeholder="{{ t('cart.voucher') }}" maxlength="40" autocapitalize="characters"></label>
+        <button class="btn ghost small" type="submit">{{ t('cart.apply') }}</button>
+      </form>
+      <p class="form-msg" data-voucher-msg></p>
+      <dl class="totals" data-totals></dl>
+    </aside>
+  </div>
+</div>
+{% endblock %}

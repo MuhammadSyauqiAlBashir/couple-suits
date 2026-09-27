@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% from "_macros.html" import grid, head with context %}
+{% set og_type = "article" %}
+{% block main %}
+<article class="article">
+  {% if post.cover %}<div class="article-cover">{{ img(post.cover, tr(post, 'title'), "100vw", "", true, 1800) }}</div>{% endif %}
+  <div class="wrap narrow">
+    <p class="muted small">{{ (post.published_at or post.created)[:10] }}</p>
+    <h1 class="page-title">{{ tr(post, 'title') }}</h1>
+    <div class="prose">{{ tr(post, 'body')|md }}</div>
+  </div>
+</article>
+{% if related %}<section class="wrap block">{{ head(t('lookbook.shop')) }}{{ grid(related) }}</section>{% endif %}
+{% endblock %}

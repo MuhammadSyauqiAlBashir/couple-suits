@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% set page_id = "family" %}
+{% block main %}
+<div class="wrap narrow account">
+  <p><a href="/account" class="muted small">← {{ t('nav.account') }}</a></p>
+  <h1 class="page-title">{{ t('a.family') }}</h1>
+  <p class="lead">{{ t('a.family_hint') }}</p>
+  <div class="family-list">
+    {% for m in members %}
+    <form method="post" action="/account/family" class="member-card" data-member-form>
+      <input type="hidden" name="member_id" value="{{ m.id }}">
+      {% include "account/_member_fields.html" %}
+      <div class="member-actions">
+        <button class="btn primary small" type="submit" name="action" value="save">{{ t('a.save') }}</button>
+        <button class="btn ghost small" type="submit" name="action" value="delete" formnovalidate>{{ t('a.delete') }}</button>
+      </div>
+    </form>
+    {% endfor %}
+    {% set m = {} %}
+    <form method="post" action="/account/family" class="member-card new" data-member-form>
+      <h2>{{ t('a.add_member') }}</h2>
+      {% include "account/_member_fields.html" %}
+      <button class="btn primary" type="submit" name="action" value="save"><svg class="i"><use href="#i-plus"/></svg> {{ t('a.add_member') }}</button>
+    </form>
+  </div>
+  <script type="application/json" id="family-data">{{ {'roles': roles, 'sizes': cut_sizes}|tojson }}</script>
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% from "_macros.html" import grid, head, stars with context %}
+{% set page_id = "home" %}
+{% block main %}
+{% for sec in sections %}
+{% set d = sec.data %}
+{% if sec.kind == "hero" %}
+<section class="hero">
+  <div class="hero-media">{{ img(sec.image, tr(d, 'title') or brand, "100vw", "", loop.first, 1800) }}</div>
+  <div class="hero-text">
+    <p class="eyebrow">{{ tr(d, 'eyebrow') or brand }}</p>
+    <h1>{{ tr(d, 'title') or tr(s, 'tagline') }}</h1>
+    {% set sub = tr(d, 'text') %}{% if sub %}<p>{{ sub }}</p>{% endif %}
+    <a class="btn light" href="{{ d.link or '/shop' }}">{{ tr(d, 'cta') or t('nav.shop') }}</a>
+  </div>
+</section>
+{% elif sec.kind == "sets" %}
+<section class="wrap block">
+  {{ head(tr(d, 'title') or t('home.shop_sets')) }}
+  <div class="tiles tiles-{{ sec.tiles|length }}">
+    {% for tile in sec.tiles %}
+    <a class="tile" href="/shop?set={{ tile.key }}">
+      {{ img(tile.image, t('set.' ~ tile.key), "(max-width: 700px) 100vw, 33vw", "", false, 1200) }}
+      <span class="tile-label"><b>{{ t('set.' ~ tile.key) }}</b><svg class="i"><use href="#i-arrow"/></svg></span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% elif sec.kind == "products" %}
+<section class="wrap block">
+  {% set default_title = {'new': t('home.new'), 'sale': t('sale.title'), 'popular': t('sort.popular')}.get(sec.mode, t('home.featured')) %}
+  {% set more = {'new': '/shop?sort=new', 'sale': '/sale', 'popular': '/shop?sort=popular'}.get(sec.mode, '/shop') %}
+  {{ head(tr(d, 'title') or default_title, more) }}
+  {{ grid(sec.cards) }}
+</section>
+{% elif sec.kind == "collection" %}
+<section class="wrap block">
+  <a class="banner" href="/collections/{{ sec.collection.slug }}">
+    {{ img(sec.collection.image, tr(sec.collection, 'name'), "100vw", "", false, 1800) }}
+    <span class="banner-text"><b>{{ tr(sec.collection, 'name') }}</b><span>{{ tr(sec.collection, 'description')|truncate(140) }}</span></span>
+  </a>
+  {{ grid(sec.cards) }}
+</section>
+{% elif sec.kind == "lookbook" %}
+<section class="wrap block">
+  <a class="banner tall" href="/lookbook/{{ sec.lookbook.slug }}">
+    {{ img(sec.lookbook.cover, tr(sec.lookbook, 'title'), "100vw", "", false, 1800) }}
+    <span class="banner-text"><em>{{ t('lookbook.title') }}</em><b>{{ tr(sec.lookbook, 'title') }}</b></span>
+  </a>
+</section>
+{% elif sec.kind == "story" %}
+<section class="wrap block story{{ ' flip' if d.align == 'right' }}">
+  <div class="story-media">{{ img(d.image, tr(d, 'title'), "(max-width: 800px) 100vw, 50vw", "", false, 1200) }}</div>
+  <div class="story-text">
+    <h2>{{ tr(d, 'title') }}</h2>
+    <div class="prose">{{ tr(d, 'text')|md }}</div>
+    {% if d.link %}<a class="btn ghost" href="{{ d.link }}">{{ tr(d, 'cta') or t('more') }}</a>{% endif %}
+  </div>
+</section>
+{% elif sec.kind == "usp" %}
+<section class="usp wrap">
+  <div><svg class="i"><use href="#i-users"/></svg><h3>{{ t('usp.1') }}</h3><p>{{ t('usp.1b') }}</p></div>
+  <div><svg class="i"><use href="#i-ruler"/></svg><h3>{{ t('usp.2') }}</h3><p>{{ t('usp.2b') }}</p></div>
+  <div><svg class="i"><use href="#i-scissors"/></svg><h3>{{ t('usp.3') }}</h3><p>{{ t('usp.3b') }}</p></div>
+</section>
+{% elif sec.kind == "categories" %}
+<section class="wrap block">
+  {{ head(tr(d, 'title') or t('nav.categories')) }}
+  <div class="cat-row">
+    {% for tile in sec.tiles %}
+    <a class="cat" href="/c/{{ tile.cat.slug }}">{{ img(tile.image, tr(tile.cat, 'name'), "(max-width: 700px) 40vw, 20vw") }}<span>{{ tr(tile.cat, 'name') }}</span></a>
+    {% endfor %}
+  </div>
+</section>
+{% elif sec.kind == "reviews" %}
+<section class="wrap block">
+  {{ head(tr(d, 'title') or t('home.reviews')) }}
+  <div class="review-row">
+    {% for r in sec.reviews %}
+    <figure class="review-card">
+      {% if r.photos %}{{ img(r.photos[0], r.family or r.name, "(max-width: 700px) 80vw, 30vw") }}{% endif %}
+      <figcaption>
+        {{ stars(r.rating) }}
+        <blockquote>{{ r.text|truncate(220) }}</blockquote>
+        <p class="who">{{ r.name }}{% if r.family %} · {{ r.family }}{% endif %}</p>
+        {% if r.product_rec %}<a class="small" href="/p/{{ r.product_rec.slug }}">{{ tr(r.product_rec, 'name') }}</a>{% endif %}
+      </figcaption>
+    </figure>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endfor %}
+<section class="wrap block" data-recs hidden>
+  {{ head(t('recs.title')) }}
+  <div class="grid" data-recs-grid></div>
+</section>
+{% endblock %}
