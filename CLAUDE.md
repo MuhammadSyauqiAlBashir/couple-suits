@@ -7,6 +7,11 @@ admin too. Storefront https://shop.bashir.my.id · Admin https://shop-admin.bash
 Read `README.md` (layout, deploy, operations, AI limits) and `docs/DESIGN.md` (§0 as-built status, §1 decisions,
 §2 AI studio, data model) before deeper work. Server-wide facts are in `~/.claude/CLAUDE.md`.
 
+Original conversations (everything the owner asked and decided, 2026-09-26 → 10-03, all apps; search them when a
+detail is missing): `~/work/tx_user.txt` (owner's messages), `~/work/tx_asks.txt` (multiple-choice decisions),
+`~/work/tx_assistant.txt` (Claude's longer answers); raw transcript
+`~/.claude/projects/-home-bashir/b434ae8c-ff15-4ca3-aa6d-842e57f5a2aa.jsonl`.
+
 ## Rules for working on this app
 
 - Not open to real customers yet (demo catalog only). **Once real orders/customers exist, treat their data like
@@ -53,6 +58,22 @@ Read `README.md` (layout, deploy, operations, AI limits) and `docs/DESIGN.md` (�
   details; flats = chosen + first 2 details; family = front flat + first 3 details (earliest uploaded first).
 - Demo catalog: 8 products with FLUX photos (`demo=true`), `tools/demo_catalog.py`; remove in Settings.
 - Email (Brevo): **postponed by the owner** (SPF merge + DKIM needed later).
+
+## Owner's original brief (2026-09-27) and extra facts
+
+- Brief: an online shop for matching clothes for couples **and kids/whole families** (any roles: spouse, son,
+  daughter, siblings, mom+daughter… via a custom role picker); a very good storefront UI/UX for families; **no
+  payments yet** — orders notify the admins; all good e-commerce personalisation; an admin CMS (PWA) where the wife
+  designs with AI help from hand drawings + cropped detail photos (collar, buttons, waist shape…) → several
+  options → the chosen one becomes a full design with global sizing. Desktop + mobile web; iPhone web app a bonus.
+- Interview: subdomains of bashir.my.id for now; order-only (admins contact the customer); notifications = admin app
+  push only (no paid WhatsApp API, no unofficial venom-style bots); optional customer accounts (email + password);
+  ID/EN; minimal premium look; brand assets entered later in the CMS; both owners full admin access; promotions =
+  vouchers, family-set discount, flash sale, special-day vouchers; content = homepage builder, lookbook, blog, FAQ,
+  size guide, policies; built-in analytics chosen over Google Analytics (enough, cookie-free); ready stock +
+  pre-order; Asian/Indonesian adult + kids-by-age sizing.
+- AI images: the owner wanted free options (asked about DeepSeek too); options were compared; chosen **free FLUX.2
+  klein 4B on Cloudflare + an HQ button** (klein 9B). Paid Gemini image generation (~Rp16–33k/design) was declined.
 
 ## AI limits (free) and sharing
 
